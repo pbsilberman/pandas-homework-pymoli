@@ -1,4 +1,6 @@
 
+# Heroes of Pymoli Data Analysis
+
 
 ```python
 # Import dependencies
@@ -96,6 +98,8 @@ pymoli_df.head()
 
 
 
+# Total Players
+
 
 ```python
 # Find the total number of players by counting the number of screen names (SN)
@@ -143,16 +147,21 @@ players_df
 
 
 
+# Purchasing analysis (Total)
+
 
 ```python
-# Purchasing analysis (Total)
+# Unique items is the total distinct Item IDs, captured by value_counts
 unique_items = len(pymoli_df["Item ID"].value_counts())
-avg_purchase = pymoli_df["Price"].mean()
+# Use mean on the price column to get average purchase amount
+avg_purchase_total = pymoli_df["Price"].mean()
+# Check the length of the Price series to get the total number of purchases
 total_purchases = len(pymoli_df["Price"])
+# Sum the Price series to get the total revenue
 total_revenue = pymoli_df["Price"].sum()
 
 purchasing_analysis_df = pd.DataFrame({"Number of unique items": unique_items,
-                                       "Average price": avg_purchase,
+                                       "Average price": avg_purchase_total,
                                        "Number of purchases": total_purchases,
                                        "Total revenue": total_revenue}, index = [0])
 
@@ -203,11 +212,14 @@ purchasing_analysis_df
 
 
 
+# Gender Demographics
+
 
 ```python
-# Gender Demographics
+# Group by Gender in order to extract summary data
 gender_grouped = pymoli_df.groupby("Gender")
 
+# Create a data frame with the summary gender data
 gender_demo = pd.DataFrame({"Total Counts": gender_grouped["SN"].nunique(),
                            "Percentage of Players": 100*gender_grouped["SN"].nunique()/total_players})
 
@@ -268,14 +280,16 @@ gender_demo
 
 
 
+# Purchasing Analysis (Gender)
+
 
 ```python
-# Purchasing Analysis (Gender)
+# Use methods on GroupedSeries objects to get relevant summary statistics
 purchase_count = gender_grouped["Age"].count()
 avg_purchase = gender_grouped["Price"].mean()
 total_purchase_value = gender_grouped["Price"].sum()
 
-
+# Create a summary data frame
 purchasing_by_gender_df = pd.DataFrame({"Purchase count": purchase_count,
                                        "Average purchase price": avg_purchase,
                                        "Total purchase value": total_purchase_value})
@@ -343,10 +357,10 @@ purchasing_by_gender_df
 
 
 
-
-```python
 # Age demographics
 
+
+```python
 # Use halves because ages are whole numbers and borders appear to be inclusive
 # Made the last number very large to get any older folks included in the dataset
 bins = [0, 9.5, 14.5, 19.5, 24.5, 29.5, 34.5, 39.5, 1000]
@@ -442,9 +456,11 @@ age_demo
 
 
 
+# Purchasing Analysis (Age)
+
 
 ```python
-# Purchasing Analysis (Age)
+# Extract the datapoints by performing operations on the relevant Grouped Series
 purchase_count = age_grouped["Age"].count()
 avg_purchase = age_grouped["Price"].mean()
 total_purchase_value = age_grouped["Price"].sum()
@@ -547,9 +563,11 @@ purchasing_by_age_df
 
 
 
+# Top Spenders
+
 
 ```python
-# Top spenders
+# In order to find top spenders, group by screen name
 spending_grouped = pymoli_df.groupby("SN")
 
 purchase_count = spending_grouped["Age"].count()
@@ -641,15 +659,114 @@ top_purchasers_df.iloc[0:5,:]
 
 
 
+# Most Popular Items
+
 
 ```python
-# Most popular items
+# Group by Item ID and Item Name
 items_grouped = pymoli_df.groupby(["Item ID", "Item Name"])
 
 purchase_count = items_grouped["Age"].count()
 total_purchase_value = items_grouped["Price"].sum()
 item_price = items_grouped["Price"].max() # this returns the item price because the max per each item = the min
 
+top_items_df = pd.DataFrame({"Purchase count": purchase_count,
+                                       "Item price": item_price,
+                                       "Total purchase value": total_purchase_value})
+
+# Sort the data frame by "Purchase count" descending
+top_items_df = top_items_df.sort_values("Purchase count", ascending = False)
+
+# Format the money columns to appear as money
+top_items_df["Total purchase value"] = top_items_df["Total purchase value"].map("${:.2f}".format)
+top_items_df["Item price"] = top_items_df["Item price"].map("${:.2f}".format)
+
+# Select the top 5 rows of the sorted data frame
+top_items_df.iloc[0:5,:]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>Item price</th>
+      <th>Purchase count</th>
+      <th>Total purchase value</th>
+    </tr>
+    <tr>
+      <th>Item ID</th>
+      <th>Item Name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>39</th>
+      <th>Betrayal, Whisper of Grieving Widows</th>
+      <td>$2.35</td>
+      <td>11</td>
+      <td>$25.85</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <th>Arcane Gem</th>
+      <td>$2.23</td>
+      <td>11</td>
+      <td>$24.53</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <th>Trickster</th>
+      <td>$2.07</td>
+      <td>9</td>
+      <td>$18.63</td>
+    </tr>
+    <tr>
+      <th>175</th>
+      <th>Woeful Adamantite Claymore</th>
+      <td>$1.24</td>
+      <td>9</td>
+      <td>$11.16</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <th>Serenity</th>
+      <td>$1.49</td>
+      <td>9</td>
+      <td>$13.41</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+# Most Profitable Items
+
+
+```python
+# We can use the same data structures from the most popular items, we just order differently
+# We want to re-initialize the data frame in order to undo the formatting
 top_items_df = pd.DataFrame({"Purchase count": purchase_count,
                                        "Item price": item_price,
                                        "Total purchase value": total_purchase_value})
