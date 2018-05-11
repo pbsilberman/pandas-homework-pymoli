@@ -1,6 +1,10 @@
 
 # Heroes of Pymoli Data Analysis
 
+* First observation
+* Second observation
+* Third observation
+
 
 ```python
 # Import dependencies
@@ -98,7 +102,7 @@ pymoli_df.head()
 
 
 
-# Total Players
+## Total Players
 
 
 ```python
@@ -147,7 +151,7 @@ players_df
 
 
 
-# Purchasing analysis (Total)
+## Purchasing analysis (Total)
 
 
 ```python
@@ -212,16 +216,17 @@ purchasing_analysis_df
 
 
 
-# Gender Demographics
+## Gender Demographics
 
 
 ```python
 # Group by Gender in order to extract summary data
 gender_grouped = pymoli_df.groupby("Gender")
+unique_members = gender_grouped["SN"].nunique()
 
 # Create a data frame with the summary gender data
-gender_demo = pd.DataFrame({"Total Counts": gender_grouped["SN"].nunique(),
-                           "Percentage of Players": 100*gender_grouped["SN"].nunique()/total_players})
+gender_demo = pd.DataFrame({"Total Counts": unique_members,
+                           "Percentage of Players": 100*unique_members/total_players})
 
 gender_demo["Percentage of Players"] = gender_demo["Percentage of Players"].map("{:.2f}".format)
 
@@ -280,7 +285,7 @@ gender_demo
 
 
 
-# Purchasing Analysis (Gender)
+## Purchasing Analysis (Gender)
 
 
 ```python
@@ -292,10 +297,12 @@ total_purchase_value = gender_grouped["Price"].sum()
 # Create a summary data frame
 purchasing_by_gender_df = pd.DataFrame({"Purchase count": purchase_count,
                                        "Average purchase price": avg_purchase,
-                                       "Total purchase value": total_purchase_value})
+                                       "Total purchase value": total_purchase_value,
+                                       "Normalized Total": total_purchase_value/unique_members})
 
 purchasing_by_gender_df["Average purchase price"] = purchasing_by_gender_df["Average purchase price"].map("${:.2f}".format)
 purchasing_by_gender_df["Total purchase value"] = purchasing_by_gender_df["Total purchase value"].map("${:.2f}".format)
+purchasing_by_gender_df["Normalized Total"] = purchasing_by_gender_df["Normalized Total"].map("${:.2f}".format)
 
 purchasing_by_gender_df
 ```
@@ -322,11 +329,13 @@ purchasing_by_gender_df
     <tr style="text-align: right;">
       <th></th>
       <th>Average purchase price</th>
+      <th>Normalized Total</th>
       <th>Purchase count</th>
       <th>Total purchase value</th>
     </tr>
     <tr>
       <th>Gender</th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -336,18 +345,21 @@ purchasing_by_gender_df
     <tr>
       <th>Female</th>
       <td>$2.82</td>
+      <td>$3.83</td>
       <td>136</td>
       <td>$382.91</td>
     </tr>
     <tr>
       <th>Male</th>
       <td>$2.95</td>
+      <td>$4.02</td>
       <td>633</td>
       <td>$1867.68</td>
     </tr>
     <tr>
       <th>Other / Non-Disclosed</th>
       <td>$3.25</td>
+      <td>$4.47</td>
       <td>11</td>
       <td>$35.74</td>
     </tr>
@@ -357,7 +369,7 @@ purchasing_by_gender_df
 
 
 
-# Age demographics
+## Age demographics
 
 
 ```python
@@ -370,9 +382,10 @@ bin_labels = ["<10", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40+"
 pymoli_df["Age group"] = pd.cut(pymoli_df["Age"], bins, labels = bin_labels)
 
 age_grouped = pymoli_df.groupby("Age group")
+unique_members = age_grouped["SN"].nunique()
 
 age_demo = pd.DataFrame({"Total Counts": age_grouped["SN"].nunique(),
-                           "Percentage of Players": 100*age_grouped["SN"].nunique()/total_players})
+                           "Percentage of Players": 100*unique_members/total_players})
 
 age_demo["Percentage of Players"] = age_demo["Percentage of Players"].map("{:.2f}".format)
 
@@ -456,7 +469,7 @@ age_demo
 
 
 
-# Purchasing Analysis (Age)
+## Purchasing Analysis (Age)
 
 
 ```python
@@ -468,10 +481,13 @@ total_purchase_value = age_grouped["Price"].sum()
 
 purchasing_by_age_df = pd.DataFrame({"Purchase count": purchase_count,
                                        "Average purchase price": avg_purchase,
-                                       "Total purchase value": total_purchase_value})
+                                       "Total purchase value": total_purchase_value,
+                                        "Normalized Total": total_purchase_value/unique_members})
 
 purchasing_by_age_df["Average purchase price"] = purchasing_by_age_df["Average purchase price"].map("${:.2f}".format)
 purchasing_by_age_df["Total purchase value"] = purchasing_by_age_df["Total purchase value"].map("${:.2f}".format)
+purchasing_by_age_df["Normalized Total"] = purchasing_by_age_df["Normalized Total"].map("${:.2f}".format)
+
 
 purchasing_by_age_df
 ```
@@ -498,11 +514,13 @@ purchasing_by_age_df
     <tr style="text-align: right;">
       <th></th>
       <th>Average purchase price</th>
+      <th>Normalized Total</th>
       <th>Purchase count</th>
       <th>Total purchase value</th>
     </tr>
     <tr>
       <th>Age group</th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -512,48 +530,56 @@ purchasing_by_age_df
     <tr>
       <th>&lt;10</th>
       <td>$2.98</td>
+      <td>$4.39</td>
       <td>28</td>
       <td>$83.46</td>
     </tr>
     <tr>
       <th>10-14</th>
       <td>$2.77</td>
+      <td>$4.22</td>
       <td>35</td>
       <td>$96.95</td>
     </tr>
     <tr>
       <th>15-19</th>
       <td>$2.91</td>
+      <td>$3.86</td>
       <td>133</td>
       <td>$386.42</td>
     </tr>
     <tr>
       <th>20-24</th>
       <td>$2.91</td>
+      <td>$3.78</td>
       <td>336</td>
       <td>$978.77</td>
     </tr>
     <tr>
       <th>25-29</th>
       <td>$2.96</td>
+      <td>$4.26</td>
       <td>125</td>
       <td>$370.33</td>
     </tr>
     <tr>
       <th>30-34</th>
       <td>$3.08</td>
+      <td>$4.20</td>
       <td>64</td>
       <td>$197.25</td>
     </tr>
     <tr>
       <th>35-39</th>
       <td>$2.84</td>
+      <td>$4.42</td>
       <td>42</td>
       <td>$119.40</td>
     </tr>
     <tr>
       <th>40+</th>
       <td>$3.16</td>
+      <td>$4.89</td>
       <td>17</td>
       <td>$53.75</td>
     </tr>
@@ -563,7 +589,7 @@ purchasing_by_age_df
 
 
 
-# Top Spenders
+## Top Spenders
 
 
 ```python
@@ -659,7 +685,7 @@ top_purchasers_df.iloc[0:5,:]
 
 
 
-# Most Popular Items
+## Most Popular Items
 
 
 ```python
@@ -761,7 +787,7 @@ top_items_df.iloc[0:5,:]
 
 
 
-# Most Profitable Items
+## Most Profitable Items
 
 
 ```python
