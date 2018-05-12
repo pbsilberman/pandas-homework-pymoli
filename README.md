@@ -1,9 +1,9 @@
 
 # Heroes of Pymoli Data Analysis
 
-* First observation
-* Second observation
-* Third observation
+* Heroes of Pymoli is dominated by male players between 15 and 29 years old. Just over 80% of the player base is male and, additionally, they are slightly more profitable than female players. About 77% percent of the player base falls between 15 and 29 years old. Historically, this is the most common gaming demographic.
+* The average purchase in Heroes of Pymoli is relatively low (2.93). This leads one to believe that the game is buyoed mostly by a large swath of microtransactions. In particular, if we analyze the top spenders, they don't even crack twenty dollars. While this does mean the top spender contributes about 6 times more than the average customer, the vast majority of the revenue comes from one and two time purchasers.
+* The most profitable item, the Retribution Axe, has been purchased 9 times, which ties it in popularity for the third most popular item. This is clearly an item to focus on and one to examine further. If we can produce more items like the axe, then that could be an easy path to increasing profitability. Similarly, it seems like making items cost over $3.50 doesn't scare away the player base, as evidenced by the most profitable item list. Making some more desirable items slightly more expensive should similarly increase profits.
 
 
 ```python
